@@ -1,6 +1,5 @@
 const express = require("express");
 const RoutesAuth = require("./Routes/RoutesAuth");
-const RoutesUser = require("./Routes/RoutesUser");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");

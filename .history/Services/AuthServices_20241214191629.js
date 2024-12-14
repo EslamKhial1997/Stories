@@ -61,9 +61,21 @@ exports.protect = expressAsyncHandler(async (req, res, next) => {
   // الانتقال إلى المعالج التالي
   next();
 });
+
+exports.SingUp = expressAsyncHandler(async (req, res) => {
+  const createAuth = await UsersModel.create({
+    email: req.body.email,
+    password: await bcrypt.hash(req.body.password, 12),
+    passwordConfirm: await bcrypt.hash(req.body.passwordConfirm, 12),
+  });
+  const token = jwt.sign({ userId: createAuth._id }, process.env.SECRET_KEY, {
+    expiresIn: "360d",
+  });
+  res.status(201).json({ data: createAuth, token });
+});
 exports.Login = expressAsyncHandler(async (req, res, next) => {
   const user = await UsersModel.findOne({
-    $or: [{ email: req.body.email }, { firebaseUID: req.body.firebaseUID }],
+    $or: [{ email: req.body.email }, { phone: req.body.phone }],
   });
   if (!user && !bcrypt.compare(req.body.password, user.password)) {
     return next(new ApiError("InCorrect password Or Email", 404));
@@ -74,12 +86,14 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user, token });
 });
 exports.SingInFirebase = expressAsyncHandler(async (req, res, next) => {
-  const { uid, email  } = req.user;
+  const { uid, email, name,  } = req.user;
   let user = await UsersModel.findOne({ firebaseUid: uid });
   if (!user) {
     const createAuth = await UsersModel.create({
+      name,
       email,
       firebaseUid: uid,
+      profilePicture: picture,
     });
     const token = jwt.sign({ userId: createAuth._id }, process.env.SECRET_KEY, {
       expiresIn: "365",
@@ -106,5 +120,4 @@ exports.verifyToken = async (req, res, next) => {
     return res.status(401).send("Invalid Token");
   }
 };
-exports.updateUser = factory.updateOne(UsersModel)
 exports.getMe = factory.getOne(UsersModel);

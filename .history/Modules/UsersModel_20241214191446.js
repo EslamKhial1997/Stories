@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
-  firebaseUID: { type: String, required: true, unique: true },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  token: String,
+  firebaseUID: String,
+  email: String,
   username: String,
   phone: String,
   grander: {

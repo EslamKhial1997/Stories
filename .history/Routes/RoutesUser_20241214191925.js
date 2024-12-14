@@ -6,13 +6,11 @@ const {
   getMe,
   getLoggedUserData,
   protect,
-  Login,
 } = require("../Services/AuthServices");
 
 const Routes = Router();
 
-Routes.get("/getMe", protect, getLoggedUserData, getMe);
-Routes.post("/login", Login);
-Routes.route("/firebase").post(verifyToken, SingInFirebase);
+Routes.get("/update", protect, getLoggedUserData, getMe);
+Routes.route("/signup/firebase").post(verifyToken, SingInFirebase);
 
 module.exports = Routes;

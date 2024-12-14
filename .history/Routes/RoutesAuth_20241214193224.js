@@ -12,7 +12,7 @@ const {
 const Routes = Router();
 
 Routes.get("/getMe", protect, getLoggedUserData, getMe);
-Routes.post("/login", Login);
+Routes.get("/login", Login);
 Routes.route("/firebase").post(verifyToken, SingInFirebase);
 
 module.exports = Routes;

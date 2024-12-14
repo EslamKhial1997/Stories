@@ -111,7 +111,5 @@ exports.updateOne = (Model) =>
         )
       );
     updateDocById.save();
-    res
-      .status(200)
-      .json({ status: true, msg: "Success Update", data: updateDocById });
+    res.status(200).json({ msg: "Success Update", data: updateDocById });
   });

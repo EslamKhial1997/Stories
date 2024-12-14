@@ -1,6 +1,5 @@
 const express = require("express");
 const RoutesAuth = require("./Routes/RoutesAuth");
-const RoutesUser = require("./Routes/RoutesUser");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -18,7 +17,6 @@ dotenv.config({ path: "config.env" });
 app.use(cors());
 app.use(express.json());
 app.use("/api/v1/auth", RoutesAuth);
-app.use("/api/v1/user", RoutesUser);
 io.on("connection", (socket) => {
   io.socketsJoin("room1");
   socket.on("user-name", (username) => {
