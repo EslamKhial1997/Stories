@@ -13,6 +13,6 @@ const Routes = Router();
 
 Routes.get("/getMe", protect, getLoggedUserData, getMe);
 Routes.post("/login", Login);
-Routes.route("/firebase").post(SingInFirebase);
+Routes.route("/firebase").post(, SingInFirebase);
 
 module.exports = Routes;

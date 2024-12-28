@@ -18,5 +18,17 @@ const userSchema = new mongoose.Schema({
   },
   birthday: String,
 });
+const ImageURL = (doc) => {
+  if (doc.image && !doc.image.includes(`${process.env.BASE_URL}/user`)) {
+    const image = `${process.env.BASE_URL}/user/${doc.image}`;
+    doc.image = image;
+  }
+};
+userSchema.post("init", (doc) => {
+  ImageURL(doc);
+});
+userSchema.post("save", (doc) => {
+  ImageURL(doc);
+});
 const UsersModel = mongoose.model("Users", userSchema);
 module.exports = UsersModel;

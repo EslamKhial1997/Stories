@@ -73,41 +73,23 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
   });
   res.status(200).json({ data: user, token });
 });
-
-
 exports.SingInFirebase = expressAsyncHandler(async (req, res, next) => {
   const { uid, email, username, image } = req.body;
+  let user = await UsersModel.findOne({ firebaseUID: uid });
+  console.log(user);
+  
+  if (!user) {
+    const createAuth = await UsersModel.create({
+      email,
+      username,
+      firebaseUid: uid,
+      image,
+    });
+    const token = jwt.sign({ userId: createAuth._id }, process.env.SECRET_KEY, {
+      expiresIn: "365",
+    });
 
-  try {
-    // البحث عن المستخدم بناءً على Firebase UID
-    let user = await UsersModel.findOne({ firebaseUID: uid });
-
-    // إذا لم يكن المستخدم موجودًا، نقوم بإنشاء حساب جديد
-    if (!user) {
-      const createAuth = await UsersModel.create({
-        email,
-        username,
-        firebaseUID: uid,
-        image,
-      });
-
-      // إنشاء التوكن للمستخدم الجديد
-      const token = jwt.sign({ userId: createAuth._id }, process.env.SECRET_KEY, {
-        expiresIn: "365d", // تم تحديد المدة بشكل صحيح
-      });
-
-      return res.status(201).json({ data: createAuth, token });
-    } else {
-      // إذا كان المستخدم موجودًا بالفعل، نقوم بإنشاء التوكن له
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-        expiresIn: "365d", // تم تحديد المدة بشكل صحيح
-      });
-
-      return res.status(200).json({ data: user, token });
-    }
-  } catch (error) {
-    // في حالة حدوث أي خطأ، قم بتمريره إلى المعالج التالي
-    next(error);
+    res.status(201).json({ data: createAuth, token });
   }
 });
 

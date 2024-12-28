@@ -18,5 +18,11 @@ const userSchema = new mongoose.Schema({
   },
   birthday: String,
 });
+userSchema.post("init", (doc) => {
+  ImageURL(doc);
+});
+userSchema.post("save", (doc) => {
+  ImageURL(doc);
+});
 const UsersModel = mongoose.model("Users", userSchema);
 module.exports = UsersModel;

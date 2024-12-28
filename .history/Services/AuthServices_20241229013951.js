@@ -73,7 +73,9 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
   });
   res.status(200).json({ data: user, token });
 });
-
+const expressAsyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
+const UsersModel = require("../models/UsersModel");
 
 exports.SingInFirebase = expressAsyncHandler(async (req, res, next) => {
   const { uid, email, username, image } = req.body;
