@@ -19,7 +19,14 @@ const uploadsPath = path.join(__dirname, "uploads");
 app.use(express.static(uploadsPath));
 app.use(express.json({ limit: "20kb" }));
  dbCollection();
-app.use(cors());
+// allow connections from all local hosts and their ports
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], 
+    credentials: false, 
+  })
+);
 app.use("/api/v1/auth", RoutesAuth);
 app.use("/api/v1/user", RoutesUser);
 io.on("connection", (socket) => {
