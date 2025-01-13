@@ -13,8 +13,7 @@ const userSchema = new mongoose.Schema({
   nickname: String,
   country: String,
   hisProfileComplete: {
-    type: Boolean,
-    default: false,
+    type
   },
   grander: {
     type: String,

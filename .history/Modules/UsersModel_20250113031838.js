@@ -11,11 +11,7 @@ const userSchema = new mongoose.Schema({
   phone: String,
   image: String,
   nickname: String,
-  country: String,
-  hisProfileComplete: {
-    type: Boolean,
-    default: false,
-  },
+  nickname: String,
   grander: {
     type: String,
     enum: ["male", "female"],
