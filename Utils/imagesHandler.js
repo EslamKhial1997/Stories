@@ -6,7 +6,7 @@ const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
-const logger = require('../Config/logger');
+const logger = require('../config/logger');
 
 const ensureUploadDirExists = (type) => {
   const dir = `uploads/${type}`;

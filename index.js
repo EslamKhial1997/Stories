@@ -9,7 +9,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const dbCollection = require("./Config/config");
 const path = require("path");
-const logger = require('./Config/logger');
+const logger = require("./config/logger");
 
 const app = express();
 const Theserver = http.createServer(app);
@@ -26,8 +26,8 @@ dbCollection();
 app.use(
   cors({
     origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], 
-    credentials: false, 
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: false,
   })
 );
 
@@ -35,13 +35,14 @@ app.use(
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.url}`, {
     ip: req.ip,
-    userAgent: req.get('user-agent')
+    userAgent: req.get("user-agent"),
   });
   next();
 });
 
 app.use("/api/v1/auth", RoutesAuth);
 app.use("/api/v1/user", RoutesUser);
+app.use("/api/v1/chat", RoutesChat);
 
 io.on("connection", (socket) => {
   io.socketsJoin("room1");
@@ -55,7 +56,7 @@ io.on("connection", (socket) => {
     if (token) {
       jwt.verify(token, "secret_key", async (err, decoded) => {
         if (err) {
-          logger.error('Invalid token error', { error: err });
+          logger.error("Invalid token error", { error: err });
           socket.emit("error", "Invalid token");
         } else {
           try {
@@ -65,7 +66,7 @@ io.on("connection", (socket) => {
               message,
             });
             await newMessage.save();
-            logger.debug('New message saved', { messageId: newMessage._id });
+            logger.debug("New message saved", { messageId: newMessage._id });
 
             io.emit("receiveMessage", {
               message,
@@ -74,26 +75,26 @@ io.on("connection", (socket) => {
               username: decoded.username,
             });
           } catch (error) {
-            logger.error('Error saving message', { error });
+            logger.error("Error saving message", { error });
             socket.emit("error", "Failed to save message");
           }
         }
       });
     } else {
-      logger.warn('Message attempt without token');
+      logger.warn("Message attempt without token");
       socket.emit("error", "No token provided");
     }
   });
 
   socket.on("disconnect", () => {
-    logger.info('Client disconnected', { socketId: socket.id });
+    logger.info("Client disconnected", { socketId: socket.id });
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  logger.error('Unhandled error', { error: err.stack });
-  res.status(500).json({ error: 'Internal server error' });
+  logger.error("Unhandled error", { error: err.stack });
+  res.status(500).json({ error: "Internal server error" });
 });
 
 Theserver.listen(3000, () => {

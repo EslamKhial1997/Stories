@@ -1,0 +1,23 @@
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:14:33"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:14:47"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:15:43"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:15:49"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:15:51"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:15:57"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:00"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:02"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:14"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:34"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:36"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:43"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:46"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:51"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:56"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:16:59"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:17:03"}
+{"ip":"::1","level":"info","message":"POST /api/v1/chat","timestamp":"2025-01-14 20:17:08","userAgent":"PostmanRuntime/7.43.0"}
+{"level":"debug","message":"JWT token verified successfully","timestamp":"2025-01-14 20:17:08","userId":"675c8140f0ca2534e41a386c"}
+{"level":"info","message":"User authenticated successfully","timestamp":"2025-01-14 20:17:08","userId":"675c8140f0ca2534e41a386c"}
+{"body":{"content":"السلام عليكم","dataReceived":"67846100e6951b584d31d894","dateSent":"675c8140f0ca2534e41a386c"},"level":"debug","message":"Creating new document","model":"chat","timestamp":"2025-01-14 20:17:08"}
+{"id":"6786aa24e624f1b293ed714e","level":"info","message":"Document created successfully","model":"chat","timestamp":"2025-01-14 20:17:08"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:17:23"}

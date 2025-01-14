@@ -1,13 +1,13 @@
-const logger = require('../Config/logger');
+const logger = require('../config/logger');
 
 class FeatureApi {
   constructor(MongooseQueryApi, QueryStringApi) {
     this.MongooseQueryApi = MongooseQueryApi;
     this.QueryStringApi = QueryStringApi;
     logger.debug('FeatureApi initialized', { 
-      query: QueryStringApi 
+      query: QueryStringApi
     });
-  } 
+  }  
 
   Fillter() {
     const QueryStringObj = { ...this.QueryStringApi };

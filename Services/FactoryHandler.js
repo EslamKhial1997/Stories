@@ -2,7 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const ApiError = require("../Resuble/ApiErrors");
 const FeatureApi = require("../Utils/Feature");
 const { filePathImage } = require("../Utils/imagesHandler");
-const logger = require('../Config/logger');
+const logger = require('../config/logger');
 
 exports.createOne = (Model) =>
   expressAsyncHandler(async (req, res) => {
