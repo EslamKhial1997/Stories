@@ -1,12 +1,15 @@
+const logger = require('../Config/logger');
+
 class FeatureApi {
   constructor(MongooseQueryApi, QueryStringApi) {
-
     this.MongooseQueryApi = MongooseQueryApi;
     this.QueryStringApi = QueryStringApi;
+    logger.debug('FeatureApi initialized', { 
+      query: QueryStringApi 
+    });
   } 
 
   Fillter() {
-    // eslint-disable-next-line node/no-unsupported-features/es-syntax
     const QueryStringObj = { ...this.QueryStringApi };
     const excludes = ["page", "limit", "skip", "sort", "fields"];
     excludes.forEach((failds) => delete QueryStringObj[failds]);
@@ -15,6 +18,11 @@ class FeatureApi {
       /\b(gte|gt|lte|lt)\b/g,
       (match) => `$${match}`
     );
+
+    logger.debug('Applying filter', { 
+      filter: JSON.parse(QueryString) 
+    });
+
     this.MongooseQueryApi = this.MongooseQueryApi.find(JSON.parse(QueryString));
     return this;
   }
@@ -22,8 +30,10 @@ class FeatureApi {
   Sort() {
     if (this.QueryStringApi.sort) {
       const sortby = this.QueryStringApi.sort.split(",").join(" ");
+      logger.debug('Applying custom sort', { sort: sortby });
       this.MongooseQueryApi = this.MongooseQueryApi.sort(sortby);
     } else {
+      logger.debug('Applying default sort by createdAt');
       this.MongooseQueryApi = this.MongooseQueryApi.sort("createdAt");
     }
     return this;
@@ -31,9 +41,11 @@ class FeatureApi {
 
   Fields() {
     if (this.QueryStringApi.fields) {
-      const fileds = this.QueryStringApi.fields.split(",").join(" ");
-      this.MongooseQueryApi = this.MongooseQueryApi.select(fileds);
+      const fields = this.QueryStringApi.fields.split(",").join(" ");
+      logger.debug('Selecting specific fields', { fields });
+      this.MongooseQueryApi = this.MongooseQueryApi.select(fields);
     } else {
+      logger.debug('Selecting all fields except __v');
       this.MongooseQueryApi = this.MongooseQueryApi.select("-__v");
     }
     return this;
@@ -41,8 +53,8 @@ class FeatureApi {
 
   Search(modelName) {
     let QuerySearch = {};
-    // if (modelName === "Products") {
-      if (modelName === undefined) {
+    
+    if (modelName === undefined) {
       if (this.QueryStringApi.keyword) {
         QuerySearch.$or = [
           { title: { $regex: new RegExp(this.QueryStringApi.keyword, "i") } },
@@ -52,12 +64,20 @@ class FeatureApi {
             },
           },
         ];
+        logger.debug('Applying search on title and description', { 
+          keyword: this.QueryStringApi.keyword 
+        });
       }
     } else {
       QuerySearch = {
         name: { $regex: new RegExp(this.QueryStringApi.keyword, "i") },
       };
+      logger.debug('Applying search on name field', { 
+        keyword: this.QueryStringApi.keyword,
+        modelName 
+      });
     }
+
     this.MongooseQueryApi = this.MongooseQueryApi.find(QuerySearch);
     return this;
   }
@@ -71,15 +91,26 @@ class FeatureApi {
     Pagination.CurrentPage = page;
     Pagination.limit = limit;
     Pagination.numberOfPage = Math.ceil(countDoc / limit);
+
     if (endIndex < countDoc) {
       Pagination.next = page + 1;
     }
     if (skip > 0) {
       Pagination.preve = page - 1;
     }
+
+    logger.debug('Applying pagination', { 
+      page,
+      limit,
+      skip,
+      totalDocs: countDoc,
+      pagination: Pagination 
+    });
+
     this.MongooseQueryApi = this.MongooseQueryApi.skip(skip).limit(limit);
     this.PaginateResult = Pagination;
     return this;
   }
 }
+
 module.exports = FeatureApi;
