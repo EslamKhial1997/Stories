@@ -42,6 +42,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/auth", RoutesAuth);
 app.use("/api/v1/user", RoutesUser);
+
 io.on("connection", (socket) => {
   io.socketsJoin("room1");
   socket.on("user-name", (username) => {
