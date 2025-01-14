@@ -32,7 +32,7 @@ exports.getAll = (Model, keyword) =>
 exports.getOne = (Model, populateOpt) =>
   expressAsyncHandler(async (req, res, next) => {
     let query = Model.findOne({
-      $or: [{ firebaseUid: req.user.firebaseUid }, { _id: req.params.id }],
+      _id: req.params.id,
     });
     if (populateOpt) {
       query = query.populate(populateOpt);
@@ -95,62 +95,62 @@ exports.deleteOne = (Model) =>
 
     res.status(200).json({ message: "تم الحذف بنجاح", data: deleteDoc });
   });
-  exports.updateOne = (Model, filePath) =>
-    expressAsyncHandler(async (req, res, next) => {
-      try {
-        const baseUrl = `${process.env.BASE_URL}/${filePath}/`;
-  
-        // العثور على المستند بناءً على ID
-        const findDocument = await Model.findById(req.params.id);
-  
-        if (!findDocument) {
-          return next(
-            new ApiError(
-              `Sorry, can't find the document with ID: ${req.params.id}`,
-              404
-            )
-          );
-        }
-  
-        // قائمة بالمفاتيح التي قد تحتوي على مسارات الصور
-        const imageKeys = ["image", "avater", "picture", "pdf"];
-  
-        // تحقق من كل مفتاح في req.body وقم بحذف الصورة القديمة إذا لزم الأمر
-        for (const key of imageKeys) {
-          if (req.body[key] !== undefined) {
-            // تحقق إذا كان الحقل موجودًا في req.body
-            if (findDocument[key] && findDocument[key] !== req.body[key]) {
-              const relativePathImage = findDocument[key].split(baseUrl)[1];
-              filePathImage(filePath, relativePathImage); // حذف الصورة القديمة
-            }
-          }
-        }
-  
-        // تحديث الحقول التي تحتوي على قيم جديدة فقط
-        const updateData = req.body;
-        for (const key of imageKeys) {
-          if (req.body[key] !== undefined) {
-            updateData[key] = req.body[key];
-          }
-        }
-        // تحديث المستند بناءً على ID
-        const updateDocById = await Model.findByIdAndUpdate(
-          req.params.id,
-          updateData,
-          { new: true }
+exports.updateOne = (Model, filePath) =>
+  expressAsyncHandler(async (req, res, next) => {
+    try {
+      const baseUrl = `${process.env.BASE_URL}/${filePath}/`;
+
+      // العثور على المستند بناءً على ID
+      const findDocument = await Model.findById(req.params.id);
+
+      if (!findDocument) {
+        return next(
+          new ApiError(
+            `Sorry, can't find the document with ID: ${req.params.id}`,
+            404
+          )
         );
-  
-        if (!updateDocById) {
-          return next(
-            new ApiError(
-              `Sorry, can't update the document with ID: ${req.params.id}`,
-              404
-            )
-          );
-        }
-  
-        res.status(200).json({ data: updateDocById });
-      } catch (error) {
-        next(error);
       }
-    });
+
+      // قائمة بالمفاتيح التي قد تحتوي على مسارات الصور
+      const imageKeys = ["image", "avater", "picture", "pdf"];
+
+      // تحقق من كل مفتاح في req.body وقم بحذف الصورة القديمة إذا لزم الأمر
+      for (const key of imageKeys) {
+        if (req.body[key] !== undefined) {
+          // تحقق إذا كان الحقل موجودًا في req.body
+          if (findDocument[key] && findDocument[key] !== req.body[key]) {
+            const relativePathImage = findDocument[key].split(baseUrl)[1];
+            filePathImage(filePath, relativePathImage); // حذف الصورة القديمة
+          }
+        }
+      }
+
+      // تحديث الحقول التي تحتوي على قيم جديدة فقط
+      const updateData = req.body;
+      for (const key of imageKeys) {
+        if (req.body[key] !== undefined) {
+          updateData[key] = req.body[key];
+        }
+      }
+      // تحديث المستند بناءً على ID
+      const updateDocById = await Model.findByIdAndUpdate(
+        req.params.id,
+        updateData,
+        { new: true }
+      );
+
+      if (!updateDocById) {
+        return next(
+          new ApiError(
+            `Sorry, can't update the document with ID: ${req.params.id}`,
+            404
+          )
+        );
+      }
+
+      res.status(200).json({ data: updateDocById });
+    } catch (error) {
+      next(error);
+    }
+  });

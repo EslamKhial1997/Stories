@@ -1,6 +1,7 @@
 const express = require("express");
 const RoutesAuth = require("./Routes/RoutesAuth");
 const RoutesUser = require("./Routes/RoutesUser");
+const RoutesChat = require("./Routes/RoutesChat");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -29,7 +30,8 @@ app.use(
 );
 app.use("/api/v1/auth", RoutesAuth);
 app.use("/api/v1/user", RoutesUser);
-io.on("connection", (socket) => {
+app.use("/api/v1/chat", RoutesChat);
+ io.on("connection", (socket) => {
   io.socketsJoin("room1");
   socket.on("user-name", (username) => {
     console.log(`${username} has logged in`); // طباعة رسالة عند تسجيل الدخول

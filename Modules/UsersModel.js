@@ -12,6 +12,14 @@ const userSchema = new mongoose.Schema({
   image: String,
   nickname: String,
   country: String,
+  block: {
+    type: Boolean,
+    default: false,
+  }, 
+  favorite: {
+    type: Boolean,
+    default: false,
+  },
   hisProfileComplete: {
     type: Boolean,
     default: false,
@@ -22,7 +30,7 @@ const userSchema = new mongoose.Schema({
     default: "male",
   },
   birthday: String,
-});
+},{ timestamps: true });
 const ImageURL = (doc) => {
   if (doc.image && !doc.image.includes(`${process.env.BASE_URL}/user`)) {
     const image = `${process.env.BASE_URL}/user/${doc.image}`;
