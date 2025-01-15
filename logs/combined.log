@@ -21,3 +21,12 @@
 {"body":{"content":"السلام عليكم","dataReceived":"67846100e6951b584d31d894","dateSent":"675c8140f0ca2534e41a386c"},"level":"debug","message":"Creating new document","model":"chat","timestamp":"2025-01-14 20:17:08"}
 {"id":"6786aa24e624f1b293ed714e","level":"info","message":"Document created successfully","model":"chat","timestamp":"2025-01-14 20:17:08"}
 {"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-14 20:17:23"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:00:41"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:05"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:08"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:14"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:28"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:30"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:41"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:44"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:49"}

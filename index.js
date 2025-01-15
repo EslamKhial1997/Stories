@@ -10,6 +10,7 @@ const { Server } = require("socket.io");
 const dbCollection = require("./Config/config");
 const path = require("path");
 const logger = require("./config/logger");
+const chatModel = require("./Modules/ChatModel");
 
 const app = express();
 const Theserver = http.createServer(app);
@@ -60,7 +61,7 @@ io.on("connection", (socket) => {
           socket.emit("error", "Invalid token");
         } else {
           try {
-            const newMessage = new Message({
+            const newMessage = new chatModel({
               senderId: decoded.userId,
               receiverId,
               message,

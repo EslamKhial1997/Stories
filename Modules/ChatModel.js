@@ -2,17 +2,18 @@ const { default: mongoose } = require("mongoose");
 
 const chatSchema = new mongoose.Schema(
   {
-    dateSent: {
+    senderId: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, "user ID is Required"],
       ref: "User",
     },
-    dataReceived: {
+    receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, "user ID is Required"],
       ref: "User",
     },
-    content: String,
+    message: String,
+    username: String,
     Seen: {
       type: Boolean,
       default: false,
