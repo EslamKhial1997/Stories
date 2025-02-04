@@ -1,0 +1,157 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+/* قائمة المستخدمين */
+.users-sidebar {
+    background-color: white;
+    border-left: 1px solid #dee2e6;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.user-item:hover {
+    background-color: #f8f9fa;
+}
+
+.user-item.active {
+    background-color: #e9ecef;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.user-status {
+    font-size: 0.8rem;
+    color: #28a745;
+}
+
+/* منطقة الدردشة */
+.chat-area {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.chat-header {
+    padding: 15px;
+    background-color: white;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.messages-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+
+.message.sent {
+    align-self: flex-start;
+    background-color: #007bff;
+    color: white;
+}
+
+.message.received {
+    align-self: flex-end;
+    background-color: white;
+}
+
+.message-content {
+    margin-bottom: 5px;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.message-input {
+    padding: 15px;
+    background-color: white;
+    border-top: 1px solid #dee2e6;
+}
+
+.message-input form {
+    gap: 10px;
+}
+
+/* التحسينات */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* الرسائل */
+.error-message {
+    color: #dc3545;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.success-message {
+    color: #28a745;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}

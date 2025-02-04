@@ -128,7 +128,7 @@ exports.verifyToken = async (req, res, next) => {
   if (!idToken) {
     logger.warn('Token verification attempt without token');
     return res.status(401).send("Unauthorized");
-  }
+  } 
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);

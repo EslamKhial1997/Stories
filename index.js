@@ -1,103 +1,137 @@
 const express = require("express");
-const RoutesAuth = require("./Routes/RoutesAuth");
-const RoutesUser = require("./Routes/RoutesUser");
-const RoutesChat = require("./Routes/RoutesChat");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
-const dbCollection = require("./Config/config");
+const RoutesVideo = require("./Routes/RoutesVideo");
+const RoutesAuth = require("./Routes/RoutesAuth");
+const dotenv = require("dotenv");
+
+const cors = require("cors");
 const path = require("path");
-const logger = require("./config/logger");
-const chatModel = require("./Modules/ChatModel");
-
+const dbCollection = require("./config/config");
 const app = express();
-const Theserver = http.createServer(app);
-const io = new Server(Theserver, {
-  cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] },
-});
-dotenv.config({ path: "config.env" });
-const uploadsPath = path.join(__dirname, "uploads");
-app.use(express.static(uploadsPath));
-app.use(express.json({ limit: "20kb" }));
-dbCollection();
+const server = http.createServer(app);
 
-// allow connections from all local hosts and their ports
 app.use(
   cors({
     origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: false,
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
+dotenv.config({ path: "config.env" });
 
-// Request logging middleware
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`, {
-    ip: req.ip,
-    userAgent: req.get("user-agent"),
-  });
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+dbCollection();
+app.use("/api/v1/auth", RoutesAuth);
+app.use("/api/v1/video", RoutesVideo);
+app.use("/api/v1/video", RoutesVideo);
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+  allowEIO3: true,
+  transports: ["websocket", "polling"],
+  path: "/socket.io/",
+  serveClient: false,
+  connectTimeout: 45000,
+  pingTimeout: 30000,
+  pingInterval: 25000,
+  upgradeTimeout: 10000,
+  maxHttpBufferSize: 1e8,
+});
+
+io.use((socket, next) => {
   next();
 });
 
-app.use("/api/v1/auth", RoutesAuth);
-app.use("/api/v1/user", RoutesUser);
-app.use("/api/v1/chat", RoutesChat);
-
+const users = new Map();
 io.on("connection", (socket) => {
-  io.socketsJoin("room1");
-  socket.on("user-name", (username) => {
-    logger.info(`User connected: ${username}`);
+  // إرسال رسالة ترحيب
+  socket.emit("welcome", {
+    message: "مرحباً بك!",
+    id: socket.id,
+  });
+  users.set(socket.id, {
+    id: socket.id,
+    lastActive: new Date(),
+  });
+  io.emit("users", {
+    count: users.size,
+    users: Array.from(users.keys()),
   });
 
-  socket.on("sendMessage", async (data) => {
-    const { token, message, receiverId } = data;
+  // تتبع كل الأحداث
+  socket.onAny((event, ...args) => {
+    console.log(`\nEvent "${event}" received from ${socket.id}`);
+    console.log("Arguments:", JSON.stringify(args, null, 2));
+  });
 
-    if (token) {
-      jwt.verify(token, "secret_key", async (err, decoded) => {
-        if (err) {
-          logger.error("Invalid token error", { error: err });
-          socket.emit("error", "Invalid token");
-        } else {
-          try {
-            const newMessage = new chatModel({
-              senderId: decoded.userId,
-              receiverId,
-              message,
-            });
-            await newMessage.save();
-            logger.debug("New message saved", { messageId: newMessage._id });
+  socket.on("msg", (data) => {
+    try {
+      const { to, text } = data.data;
 
-            io.emit("receiveMessage", {
-              message,
-              senderId: decoded.userId,
-              receiverId,
-              username: decoded.username,
-            });
-          } catch (error) {
-            logger.error("Error saving message", { error });
-            socket.emit("error", "Failed to save message");
-          }
-        }
+      if (!to || !text) {
+        throw new Error("يجب تحديد المستلم ونص الرسالة");
+      }
+
+      // Update last active
+      const user = users.get(socket.id);
+      if (user) {
+        user.lastActive = new Date();
+      }
+      if (users.has(to)) {
+        io.to(to).emit("msg", {
+          from: socket.id,
+          text: text,
+          time: new Date(),
+        });
+
+        // Confirm to sender
+        socket.emit("sent", {
+          status: "success",
+          to: to,
+          text: text,
+          time: new Date(),
+        });
+      } else {
+        throw new Error("المستلم غير متصل");
+      }
+    } catch (error) {
+      socket.emit("error", {
+        status: "error",
+        message: error.message,
       });
-    } else {
-      logger.warn("Message attempt without token");
-      socket.emit("error", "No token provided");
     }
   });
 
-  socket.on("disconnect", () => {
-    logger.info("Client disconnected", { socketId: socket.id });
+  // الحصول على المستخدمين
+  socket.on("users", () => {
+    const usersList = Array.from(users.keys());
+
+    socket.emit("users", {
+      count: usersList.length,
+      users: usersList,
+    });
+  });
+
+  // معالجة قطع الاتصال
+  socket.on("disconnect", (reason) => {
+    users.delete(socket.id);
+    io.emit("users", {
+      count: users.size,
+      users: Array.from(users.keys()),
+    });
   });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  logger.error("Unhandled error", { error: err.stack });
-  res.status(500).json({ error: "Internal server error" });
-});
-
-Theserver.listen(3000, () => {
-  logger.info("Server is running on port 3000");
+const PORT = 3000;
+server.listen(PORT, () => {
+  console.log(`http://localhost:${PORT}`);
 });

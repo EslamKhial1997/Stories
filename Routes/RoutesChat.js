@@ -10,7 +10,7 @@ const {
 } = require("../Services/ChatServices");
 
 const Routes = Router();
-Routes.route("/").post(protect, createChat).get(getChats);
+Routes.route("/").post( createChat).get(getChats);
 Routes.route("/:id").put(protect, updateChat).get(getChat).delete(deleteChat);
 
 module.exports = Routes;
