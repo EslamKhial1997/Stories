@@ -30,3 +30,6 @@
 {"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:41"}
 {"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:44"}
 {"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:01:49"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-01-16 00:02:25"}
+{"ip":"::1","level":"info","message":"GET /","timestamp":"2025-01-16 00:03:44","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"}
+{"ip":"::1","level":"info","message":"GET /service-worker.js","timestamp":"2025-01-16 00:03:45","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"}
